@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Checkbox, Form } from 'semantic-ui-react'
+import axios from 'axios'
+import _ from '../env'
+
+const { REACT_APP_API_URL } = process.env
 
 const Create = () => {
   const [firstName, setFirstName] = useState('')
@@ -7,9 +11,14 @@ const Create = () => {
   const [checkbox, setCheckbox] = useState(false)
 
   const postData = () => {
-    console.log(firstName)
-    console.log(lastName)
-    console.log(checkbox)
+    axios.post(
+      REACT_APP_API_URL,
+      {
+        firstName,
+        lastName,
+        checkbox,
+      },
+    )
   }
 
   return (
