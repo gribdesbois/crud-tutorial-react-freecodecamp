@@ -1,7 +1,8 @@
 import axios from 'axios'
 import _ from 'dotenv/config'
 import React, { useEffect, useState } from 'react'
-import { Table } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { Table, Button } from 'semantic-ui-react'
 
 const { REACT_APP_API_URL } = process.env
 
@@ -14,6 +15,30 @@ export default function Read() {
         setAPIData(response.data)
       })
   }, [])
+
+  const setData = (data) => {
+    const {
+      id, firstName, lastName, checkbox,
+    } = data
+    localStorage.setItem('ID', id)
+    localStorage.setItem('First Name', firstName)
+    localStorage.setItem('Last Name', lastName)
+    localStorage.setItem('Checkbox Value', checkbox)
+  }
+
+  const getData = () => {
+    axios.get(`${REACT_APP_API_URL}`)
+      .then((getData2) => {
+        setAPIData(getData2.data)
+      })
+  }
+
+  const onDelete = (id) => {
+    axios.delete(`${REACT_APP_API_URL}/${id}`)
+      .then(() => {
+        getData()
+      })
+  }
 
   return (
     <div>
@@ -32,7 +57,20 @@ export default function Read() {
               <Table.Cell>{data.firstName}</Table.Cell>
               <Table.Cell>{data.lastName}</Table.Cell>
               <Table.Cell>{data.checkbox ? 'Checked' : 'Unchecked'}</Table.Cell>
+              <Table.HeaderCell>Update</Table.HeaderCell>
+              <Link to='/update'>
+                <Table.Cell>
+                  <Button onClick={() => setData(data)}>Update</Button>
+                </Table.Cell>
+              </Link>
+              <Link to='/read'>
+                <Table.Cell>
+                  <Button onClick={() => onDelete(data.id)}>Delete</Button>
+                </Table.Cell>
+              </Link>
+
             </Table.Row>
+
           ))
           }
 
